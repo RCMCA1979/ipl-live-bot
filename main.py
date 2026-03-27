@@ -48,4 +48,3 @@ if __name__=="__main__":
     import time;time.sleep(2)
     print("URL: "+get_url())
     run_bot()
-l
