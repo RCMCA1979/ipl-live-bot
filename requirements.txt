@@ -1,5 +1,6 @@
-pyrogram
-pytgcalls
+pyrogram==2.0.106
+pytgcalls==4.0.0
 TgCrypto
 flask
 gunicorn
+aiohttp
