@@ -2,7 +2,7 @@ import os,threading,socket
 from flask import Flask,jsonify,render_template_string
 from telegram import Update,InlineKeyboardButton,InlineKeyboardMarkup
 from telegram.ext import Application,CommandHandler,ContextTypes
-BOT_TOKEN=os.environ.get("6370186145:AAGKKtgRLHkyYU04hXR81lPPWbE97Dwzfxo","NAYA_TOKEN")
+BOT_TOKEN=os.environ.get("6370186145:AAHnvO9vwgvbY7tk5PjYMgMyiYU3kgGGLZQ","NAYA_TOKEN")
 CHANNEL_ID=os.environ.get("CHANNEL_ID","-1001919117846")
 ADMIN_ID=int(os.environ.get("ADMIN_ID","587231038"))
 STREAM="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
