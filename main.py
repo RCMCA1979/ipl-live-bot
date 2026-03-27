@@ -2,11 +2,13 @@ import os,threading,asyncio,socket
 from flask import Flask,jsonify,render_template_string
 from telegram import Update,InlineKeyboardButton,InlineKeyboardMarkup
 from telegram.ext import Application,CommandHandler,ContextTypes
-BOT_TOKEN=os.environ.get("6050076233:AAHTfZpIWvzuQfZWA20uBSqYQpzvI1ozoyU","NAYA_TOKEN")
+
+BOT_TOKEN=os.environ.get("6050076233:AAHTfZpIWvzuQfZWA20uBSqYQpzvI1ozoyU","NAYA_TOKEN_YAHAN")
 CHANNEL_ID=os.environ.get("CHANNEL_ID","-1001919117846")
 ADMIN_ID=int(os.environ.get("ADMIN_ID","587231038"))
 STREAM="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
 MATCH={"teams":"CSK vs MI","score":"CSK: 97/2 (10 ov)","status":"LIVE"}
+NL=chr(10)
 app2=Flask(__name__)
 HTML=("<!DOCTYPE html><html><head>"
 "<meta charset=UTF-8><meta name=viewport content=width=device-width,initial-scale=1.0>"
@@ -22,9 +24,12 @@ HTML=("<!DOCTYPE html><html><head>"
 ".card{background:#1a1a2e;margin:10px;padding:14px;border-radius:12px;border:1px solid #333;}"
 ".score{font-size:22px;font-weight:bold;margin-top:6px;}"
 ".st{color:#4cc9f0;font-size:13px;margin-top:4px;}"
-".btn{background:#e63946;border:none;color:white;padding:11px;width:calc(100% - 20px);margin:8px 10px 16px;border-radius:8px;font-size:14px;font-weight:bold;display:block;}"
+".btn{background:#e63946;border:none;color:white;padding:11px;"
+"width:calc(100% - 20px);margin:8px 10px 16px;"
+"border-radius:8px;font-size:14px;font-weight:bold;display:block;}"
 "</style></head><body>"
-"<div class=hdr><span class=teams>{{ teams }}</span><span class=badge>LIVE</span></div>"
+"<div class=hdr><span class=teams>{{ teams }}</span>"
+"<span class=badge>LIVE</span></div>"
 "<video id=v controls autoplay muted playsinline></video>"
 "<div class=card>"
 "<div style=color:#ffd700;font-size:14px;>IPL 2026 - Live Score</div>"
@@ -36,14 +41,17 @@ HTML=("<!DOCTYPE html><html><head>"
 "var v=document.getElementById('v'),url='{{ stream_url }}';"
 "if(Hls.isSupported()){var h=new Hls();h.loadSource(url);h.attachMedia(v);"
 "h.on(Hls.Events.MANIFEST_PARSED,function(){v.play().catch(function(){});});}"
-"else if(v.canPlayType('application/vnd.apple.mpegurl')){v.src=url;v.play().catch(function(){});}"
+"else if(v.canPlayType('application/vnd.apple.mpegurl'))"
+"{v.src=url;v.play().catch(function(){});}"
 "setInterval(function(){fetch('/update').then(function(r){return r.json();})"
 ".then(function(d){document.getElementById('sc').textContent=d.score;"
-"document.getElementById('st').textContent=d.status;}).catch(function(){});},30000);"
+"document.getElementById('st').textContent=d.status;"
+"}).catch(function(){});},30000);"
 "</script></body></html>")
 @app2.route("/")
 def index():
-    return render_template_string(HTML,stream_url=STREAM,teams=MATCH["teams"],score=MATCH["score"],status=MATCH["status"])
+    return render_template_string(HTML,stream_url=STREAM,
+        teams=MATCH["teams"],score=MATCH["score"],status=MATCH["status"])
 @app2.route("/update")
 def upd():return jsonify(MATCH)
 @app2.route("/health")
@@ -59,18 +67,18 @@ def get_url():
 async def cmd_live(update:Update,context:ContextTypes.DEFAULT_TYPE):
     url=get_url()
     kb=[[InlineKeyboardButton("LIVE Dekho",url=url)]]
-    await update.message.reply_text("*IPL LIVE*
-"+MATCH["teams"]+"
-"+MATCH["score"],reply_markup=InlineKeyboardMarkup(kb),parse_mode="Markdown")
+    msg="*IPL LIVE*"+NL+MATCH["teams"]+NL+MATCH["score"]
+    await update.message.reply_text(msg,reply_markup=InlineKeyboardMarkup(kb),parse_mode="Markdown")
 async def cmd_post(update:Update,context:ContextTypes.DEFAULT_TYPE):
     if update.effective_user.id!=ADMIN_ID:
-        await update.message.reply_text("Sirf Admin!");return
+        await update.message.reply_text("Sirf Admin!")
+        return
     url=get_url()
     kb=[[InlineKeyboardButton("LIVE Dekho",url=url)]]
-    await context.bot.send_message(chat_id=CHANNEL_ID,text="*LIVE - "+MATCH["teams"]+"*
-"+MATCH["score"],reply_markup=InlineKeyboardMarkup(kb),parse_mode="Markdown")
-    await update.message.reply_text("Channel par post!
-URL: "+url)
+    txt="*LIVE - "+MATCH["teams"]+"*"+NL+MATCH["score"]
+    await context.bot.send_message(chat_id=CHANNEL_ID,text=txt,
+        reply_markup=InlineKeyboardMarkup(kb),parse_mode="Markdown")
+    await update.message.reply_text("Channel par post!"+NL+"URL: "+url)
 def run_bot():
     async def bot_main():
         a=Application.builder().token(BOT_TOKEN).build()
