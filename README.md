@@ -1,6 +1,6 @@
 # 🏏 IPL Live Bot
 
-A real-time IPL cricket live score monitoring bot that fetches live match data and delivers automated notifications via Telegram.
+A real-time IPL cricket live score monitoring bot that fetches live match data and delivers automated Telegram notifications.
 
 ---
 
@@ -34,10 +34,10 @@ This bot scrapes live IPL 2026 match data, processes score updates, and pushes r
 git clone https://github.com/RCMCA1979/ipl-live-bot.git
 cd ipl-live-bot
 pip install -r requirements.txt
-export BOT_TOKEN="your_telegram_bot_token"
-export CHAT_ID="your_chat_id"
 python main.py
 ```
+
+> Configure your credentials in the config file before running.
 
 ---
 
